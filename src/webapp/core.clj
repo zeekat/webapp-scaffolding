@@ -100,5 +100,5 @@
 
 (def handler-with-middleware
   (-> handler
-      wrap-secret-access
+;;      wrap-secret-access
       (wrap-defaults site-defaults)))
