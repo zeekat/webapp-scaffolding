@@ -90,6 +90,16 @@
   (POST "/new-person" request
         (create-new-person! request)))
 
+(defn wrap-secret-access
+  [handler]
+  (fn [{:keys [:request-method] {:keys [secret]} :params :as request}]
+    (if (or (= "yes" secret)
+            (= :post request-method))
+      (handler request)
+      (page "Oh no" "No access for you!"))))
+
+
 (def handler-with-middleware
   (-> handler
+      ;;wrap-secret-access
       (wrap-defaults site-defaults)))
