@@ -110,26 +110,44 @@
 
 
 ;;;; Middleware
+
+(defn create-new-person!
+  [{{:keys [name phone]} :params :as request}]
+  (if (or (string/blank? name) (string/blank? phone))
+    (new-person-form request {:name name :phone phone})
+    (do (addresses/add-person! (select-keys (:params request) [:name :phone]))
+        (page "OK" "Person added"))))
+
 ;;;; Destructuring
-
-
 
 (let [[a b & rest-args] [1 2 3 4]]
   (pr-str a b rest-args))
 
-;;;; Built-in threading macros
 
+;; Time & Date & Calenders etc
+;;
+;; http://www.joda.org/joda-time/
+;; https://github.com/clj-time/clj-time
 
+(System/currentTimeMillis)
 
 ;;;; Protocols
-;;;; Multi-arg fns
 ;;;; Multimethods
+
+;;;; Tools
+
+;; https://github.com/jonase/kibit
+;; geeft styling hints
+
 
 
 ;;;; Boeken en links
 
 ;; Clojure in Action
 ;; https://www.manning.com/books/clojure-in-action-second-edition
+;;
+;; Clojure for the Brave and True
+;; http://www.braveclojure.com/
 ;;
 ;; http://clojuredocs.org/
 ;;

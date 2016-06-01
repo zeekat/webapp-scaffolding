@@ -59,20 +59,20 @@
         [:p [:a {:href "/new-person"} "Add"]]))
 
 (defn new-person-form
-  [request]
+  [request person]
   (page "New person"
         (form/form-to [:post "/new-person"]
                       (anti-forgery-field)
                       "Name:"
-                      (form/text-field "name")
+                      (form/text-field "name" (:name person))
                       "Phone:"
-                      (form/text-field "phone")
+                      (form/text-field "phone" (:phone person))
                       (form/submit-button "Create!"))))
 
 (defn create-new-person!
   [{{:keys [name phone]} :params :as request}]
   (if (or (string/blank? name) (string/blank? phone))
-    (new-person-form request)
+    (new-person-form request {:name name :phone phone})
     (do (addresses/add-person! (select-keys (:params request) [:name :phone]))
         (page "OK" "Person added"))))
 
@@ -86,7 +86,7 @@
   (GET "/byebye" request
        (byebye request))
   (GET "/new-person" request
-       (new-person-form request))
+       (new-person-form request {}))
   (POST "/new-person" request
         (create-new-person! request)))
 
@@ -98,8 +98,7 @@
       (handler request)
       (page "Oh no" "No access for you!"))))
 
-
 (def handler-with-middleware
   (-> handler
-      ;;wrap-secret-access
+      wrap-secret-access
       (wrap-defaults site-defaults)))
