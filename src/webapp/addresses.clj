@@ -21,4 +21,11 @@
   [name]
   (swap! db remove-by-name name))
 
+(defn remove-by-names
+  [people names]
+  (reduce remove-by-name people names))
+
+(defn remove-by-names! [names]
+  (swap! db remove-by-names names))
+
 ;; (swap! db function ...)
