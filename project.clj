@@ -9,4 +9,4 @@
                  [hiccup "1.0.5"]
                  [org.clojure/clojure "1.8.0"]
                  [ring/ring-defaults "0.2.0"]]
-  :ring {:handler webapp.core/handler})
+  :ring {:handler webapp.core/handler-with-middleware})
