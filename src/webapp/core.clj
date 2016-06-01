@@ -1,6 +1,8 @@
 (ns webapp.core
   (:require [hiccup.page :as page :refer [include-css]]
             [hiccup.core :refer [h]]
+            [compojure.core :refer [GET POST defroutes]]
+            [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
 (defn html-body
@@ -19,7 +21,7 @@
    :headers {"Content-Type" "text/html; charset=utf-8"}
    :body (apply html-body title contents)})
 
-;;; /byebye.html
+;;; /byebye
 
 (defn byebye
   [request]
@@ -28,17 +30,19 @@
         [:p "Byebye"]
         [:p [:a {:href "/"} "take me back"]]))
 
-;; :uri "/byebye.html"
-
-(defn handler
+(defn standard
   [request]
-  (if (= (:uri request) "/byebye")
-    (byebye request)
-    (page "A webapp"
-          (prn request)
-          [:h1 "Hello!"]
-          [:p "This is the standard response page"]
-          [:p [:a {:href "/byebye"} "Bye!"]])))
+  (page "A webapp"
+        (prn request)
+        [:h1 "Hello!"]
+        [:p "This is the standard response page"]
+        [:p [:a {:href "/byebye"} "Bye!"]]))
+
+(defroutes handler
+  (GET "/" request
+       (standard request))
+  (GET "/byebye" request
+       (byebye request)))
 
 (def handler-with-middleware
   (-> handler
